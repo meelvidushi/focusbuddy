@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusBuddy - Your Productivity Companion</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">🎯</span>
+          <h1>FocusBuddy</h1>
+        </div>
+        <nav class="nav-tabs">
+          <button class="nav-tab active" data-view="timer">Timer</button>
+          <button class="nav-tab" data-view="stats">Statistics</button>
+          <button class="nav-tab" data-view="settings">Settings</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Timer View -->
+      <div id="timer-view" class="view active">
+        <div class="timer-container">
+          <!-- Mascot Section -->
+          <div class="mascot-section">
+            <div class="mascot" id="mascot">
+              <div class="mascot-character">🤖</div>
+              <div class="mascot-speech-bubble" id="mascotMessage">
+                <p>Ready to focus? Let's crush this session together! 💪</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timer Display -->
+          <div class="timer-display-card">
+            <div class="session-mode" id="sessionMode">Focus Session</div>
+            <div class="timer-circle">
+              <svg class="timer-progress" viewBox="0 0 200 200">
+                <circle class="timer-progress-bg" cx="100" cy="100" r="90"></circle>
+                <circle class="timer-progress-bar" id="progressCircle" cx="100" cy="100" r="90"></circle>
+              </svg>
+              <div class="timer-time" id="timerDisplay">25:00</div>
+            </div>
+            
+            <!-- Timer Controls -->
+            <div class="timer-controls">
+              <button class="btn btn-primary btn-large" id="startBtn">
+                <span class="btn-icon">▶</span>
+                <span>Start Focus</span>
+              </button>
+              <button class="btn btn-secondary" id="pauseBtn" disabled>
+                <span class="btn-icon">⏸</span>
+                <span>Pause</span>
+              </button>
+              <button class="btn btn-tertiary" id="stopBtn" disabled>
+                <span class="btn-icon">⏹</span>
+                <span>Stop</span>
+              </button>
+            </div>
+
+            <!-- Quick Session Selector -->
+            <div class="session-selector">
+              <button class="session-btn active" data-duration="25">25 min</button>
+              <button class="session-btn" data-duration="15">15 min</button>
+              <button class="session-btn" data-duration="45">45 min</button>
+              <button class="session-btn" data-duration="5">5 min Break</button>
+            </div>
+          </div>
+
+          <!-- Soundscape Section -->
+          <div class="soundscape-card">
+            <h3>🎵 Ambient Soundscape</h3>
+            <div class="soundscape-options">
+              <button class="soundscape-btn active" data-sound="rain">
+                <span class="soundscape-icon">☔</span>
+                <span>Rain</span>
+              </button>
+              <button class="soundscape-btn" data-sound="ocean">
+                <span class="soundscape-icon">🌊</span>
+                <span>Ocean</span>
+              </button>
+              <button class="soundscape-btn" data-sound="cafe">
+                <span class="soundscape-icon">☕</span>
+                <span>Cafe</span>
+              </button>
+              <button class="soundscape-btn" data-sound="forest">
+                <span class="soundscape-icon">🌲</span>
+                <span>Forest</span>
+              </button>
+              <button class="soundscape-btn" data-sound="none">
+                <span class="soundscape-icon">🔇</span>
+                <span>Silent</span>
+              </button>
+            </div>
+            <div class="volume-control">
+              <span>🔉</span>
+              <input type="range" id="volumeSlider" min="0" max="100" value="50" />
+              <span>🔊</span>
+            </div>
+          </div>
+
+          <!-- Today's Progress -->
+          <div class="quick-stats">
+            <div class="stat-item">
+              <div class="stat-icon">🔥</div>
+              <div class="stat-content">
+                <div class="stat-value" id="streakValue">0</div>
+                <div class="stat-label">Day Streak</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">✅</div>
+              <div class="stat-content">
+                <div class="stat-value" id="todayBlocks">0</div>
+                <div class="stat-label">Today's Sessions</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">⏱</div>
+              <div class="stat-content">
+                <div class="stat-value" id="todayMinutes">0</div>
+                <div class="stat-label">Minutes Today</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics View -->
+      <div id="stats-view" class="view">
+        <div class="stats-container">
+          <h2>📊 Your Progress</h2>
+          
+          <!-- Weekly Overview -->
+          <div class="stats-card">
+            <h3>This Week</h3>
+            <div class="weekly-stats">
+              <div class="stat-large">
+                <div class="stat-value-large" id="weekSessions">0</div>
+                <div class="stat-label">Sessions Completed</div>
+              </div>
+              <div class="stat-large">
+                <div class="stat-value-large" id="weekMinutes">0</div>
+                <div class="stat-label">Minutes Focused</div>
+              </div>
+              <div class="stat-large">
+                <div class="stat-value-large" id="weekStreak">0</div>
+                <div class="stat-label">Best Streak</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly Chart -->
+          <div class="stats-card">
+            <h3>Daily Activity</h3>
+            <div class="chart-container">
+              <canvas id="weeklyChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Recent Sessions Log -->
+          <div class="stats-card">
+            <h3>Recent Sessions</h3>
+            <div class="session-log" id="sessionLog">
+              <div class="empty-state">
+                <p>No sessions yet. Start your first focus session! 🚀</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- All-Time Stats -->
+          <div class="stats-card">
+            <h3>All-Time Statistics</h3>
+            <div class="all-time-stats">
+              <div class="stat-row">
+                <span class="stat-row-label">Total Sessions:</span>
+                <span class="stat-row-value" id="totalSessions">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-row-label">Total Focus Time:</span>
+                <span class="stat-row-value" id="totalMinutes">0 minutes</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-row-label">Longest Streak:</span>
+                <span class="stat-row-value" id="longestStreak">0 days</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-row-label">Favorite Soundscape:</span>
+                <span class="stat-row-value" id="favoriteSoundscape">None</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-row-label">Average Session:</span>
+                <span class="stat-row-value" id="avgSession">0 min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings View -->
+      <div id="settings-view" class="view">
+        <div class="settings-container">
+          <h2>⚙️ Settings</h2>
+          
+          <!-- Timer Settings -->
+          <div class="settings-card">
+            <h3>Timer Preferences</h3>
+            <div class="setting-item">
+              <label for="customFocus">Custom Focus Duration (minutes):</label>
+              <input type="number" id="customFocus" min="1" max="120" value="25" />
+            </div>
+            <div class="setting-item">
+              <label for="customBreak">Custom Break Duration (minutes):</label>
+              <input type="number" id="customBreak" min="1" max="30" value="5" />
+            </div>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="autoStartBreak" />
+                Auto-start break after focus session
+              </label>
+            </div>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="autoStartFocus" />
+                Auto-start focus after break
+              </label>
+            </div>
+          </div>
+
+          <!-- Notification Settings -->
+          <div class="settings-card">
+            <h3>Notifications</h3>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="soundNotifications" checked />
+                Play sound when session completes
+              </label>
+            </div>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="desktopNotifications" />
+                Desktop notifications (requires permission)
+              </label>
+            </div>
+            <div class="setting-item">
+              <button class="btn btn-secondary" id="requestNotificationBtn">
+                Request Notification Permission
+              </button>
+            </div>
+          </div>
+
+          <!-- Appearance -->
+          <div class="settings-card">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+              <label for="themeSelect">Color Theme:</label>
+              <select id="themeSelect">
+                <option value="blue">Ocean Blue (Default)</option>
+                <option value="green">Forest Green</option>
+                <option value="purple">Lavender Purple</option>
+                <option value="orange">Sunset Orange</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="showMascot" checked />
+                Show motivational mascot
+              </label>
+            </div>
+          </div>
+
+          <!-- Data Management -->
+          <div class="settings-card">
+            <h3>Data Management</h3>
+            <div class="setting-item">
+              <button class="btn btn-secondary" id="exportDataBtn">
+                📥 Export Session Data
+              </button>
+            </div>
+            <div class="setting-item">
+              <button class="btn btn-tertiary" id="resetDataBtn">
+                🗑️ Reset All Data
+              </button>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="settings-card">
+            <h3>About FocusBuddy</h3>
+            <p>Version 2.0 - Enhanced Edition</p>
+            <p>A productivity companion designed to help you stay focused using the Pomodoro Technique with ambient soundscapes and friendly feedback.</p>
+            <p>Created for CS 546 - Human-Computer Interaction</p>
+            <p>Fall 2025</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Completion Modal -->
+  <div id="completionModal" class="modal">
+    <div class="modal-content celebration">
+      <div class="celebration-emoji">🎉</div>
+      <h2>Awesome Work!</h2>
+      <p id="completionMessage">You've completed a focus session!</p>
+      <div class="completion-stats">
+        <div class="completion-stat">
+          <div class="completion-stat-value" id="modalSessionTime">25</div>
+          <div class="completion-stat-label">Minutes Focused</div>
+        </div>
+        <div class="completion-stat">
+          <div class="completion-stat-value" id="modalSessionCount">1</div>
+          <div class="completion-stat-label">Sessions Today</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="startBreakBtn">Take a Break</button>
+        <button class="btn btn-secondary" id="continueBtn">Continue Working</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
