@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusBuddy Hi-Fi Prototype</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4ff;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #6db3f2, #1e69de);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      padding: 2rem;
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin: 0.5rem;
+    }
+    .btn-pause {
+      background-color: #4a90e2;
+      color: white;
+    }
+    .btn-stop {
+      background-color: #f5a623;
+      color: white;
+    }
+    .timer {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FocusBuddy</h1>
+    <p>Stay Productive. Stay Motivated.</p>
+  </header>
+
+  <section>
+    <div class="card">
+      <h2>Focus Timer</h2>
+      <div class="timer" id="timer">25:00</div>
+      <button class="btn btn-pause" onclick="pauseTimer()">Pause</button>
+      <button class="btn btn-stop" onclick="stopTimer()">Stop</button>
+      <p>Soundscape: Rain ☔️</p>
+    </div>
+
+    <div class="card">
+      <h2>Progress Tracking</h2>
+      <p>You're on a 4-day streak!</p>
+      <p>Completed 5 focus blocks this week.</p>
+    </div>
+
+    <div class="card">
+      <h2>Motivational Mascot</h2>
+      <p>🤖 "You're doing great! Keep going!"</p>
+    </div>
+  </section>
+
+  <script>
+    let timerRunning = true;
+    function pauseTimer() {
+      timerRunning = !timerRunning;
+      alert(timerRunning ? 'Timer resumed' : 'Timer paused');
+    }
+    function stopTimer() {
+      document.getElementById('timer').innerText = '25:00';
+      alert('Focus session stopped.');
+    }
+  </script>
+</body>
+</html>
