@@ -44,9 +44,27 @@
       background-color: #f5a623;
       color: white;
     }
+    .btn-start {
+      background-color: #7ed957;
+      color: white;
+    }
     .timer {
       font-size: 4rem;
       margin-bottom: 1rem;
+    }
+    .log-entry {
+      margin-top: 0.5rem;
+    }
+    .log-entry span {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .log-container {
+      max-height: 200px;
+      overflow-y: auto;
+      background: #eef2ff;
+      padding: 1rem;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -60,32 +78,104 @@
     <div class="card">
       <h2>Focus Timer</h2>
       <div class="timer" id="timer">25:00</div>
+      <button class="btn btn-start" onclick="startTimer()">Start</button>
       <button class="btn btn-pause" onclick="pauseTimer()">Pause</button>
       <button class="btn btn-stop" onclick="stopTimer()">Stop</button>
-      <p>Soundscape: Rain ☔️</p>
+      <p>Soundscape: 
+        <select id="soundscape">
+          <option value="Rain">Rain ☔️</option>
+          <option value="Ocean">Ocean 🌊</option>
+          <option value="Cafe">Cafe ☕️</option>
+        </select>
+      </p>
     </div>
 
     <div class="card">
       <h2>Progress Tracking</h2>
-      <p>You're on a 4-day streak!</p>
-      <p>Completed 5 focus blocks this week.</p>
+      <p id="streak">You're on a 0-day streak!</p>
+      <p id="blocks">Completed 0 focus blocks this week.</p>
+      <div class="log-container" id="logContainer"></div>
     </div>
 
     <div class="card">
       <h2>Motivational Mascot</h2>
-      <p>🤖 "You're doing great! Keep going!"</p>
+      <p id="mascotMsg">🤖 "Let's get started!"
+      </p>
     </div>
   </section>
 
   <script>
-    let timerRunning = true;
-    function pauseTimer() {
-      timerRunning = !timerRunning;
-      alert(timerRunning ? 'Timer resumed' : 'Timer paused');
+    let timer;
+    let minutes = 25;
+    let seconds = 0;
+    let isRunning = false;
+    let streak = 0;
+    let blocks = 0;
+
+    function updateTimerDisplay() {
+      document.getElementById('timer').innerText =
+        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
+
+    function startTimer() {
+      if (!isRunning) {
+        isRunning = true;
+        document.getElementById('mascotMsg').innerText = '🤖 "You got this! Stay focused."';
+        timer = setInterval(() => {
+          if (seconds === 0) {
+            if (minutes === 0) {
+              completeSession();
+              return;
+            }
+            minutes--;
+            seconds = 59;
+          } else {
+            seconds--;
+          }
+          updateTimerDisplay();
+        }, 1000);
+      }
+    }
+
+    function pauseTimer() {
+      if (isRunning) {
+        clearInterval(timer);
+        isRunning = false;
+        document.getElementById('mascotMsg').innerText = '🤖 "Paused. Take a breather."';
+      }
+    }
+
     function stopTimer() {
-      document.getElementById('timer').innerText = '25:00';
-      alert('Focus session stopped.');
+      clearInterval(timer);
+      isRunning = false;
+      minutes = 25;
+      seconds = 0;
+      updateTimerDisplay();
+      document.getElementById('mascotMsg').innerText = '🤖 "Session stopped. Restart when ready."';
+    }
+
+    function completeSession() {
+      clearInterval(timer);
+      isRunning = false;
+      streak++;
+      blocks++;
+      minutes = 25;
+      seconds = 0;
+      updateTimerDisplay();
+      document.getElementById('streak').innerText = `You're on a ${streak}-day streak!`;
+      document.getElementById('blocks').innerText = `Completed ${blocks} focus blocks this week.`;
+      document.getElementById('mascotMsg').innerText = '🎉 "Awesome job! You finished a session!"';
+      logSession();
+    }
+
+    function logSession() {
+      const container = document.getElementById('logContainer');
+      const entry = document.createElement('div');
+      entry.classList.add('log-entry');
+      const timestamp = new Date().toLocaleString();
+      const sound = document.getElementById('soundscape').value;
+      entry.innerHTML = `<span>⏰ ${timestamp}</span> <span>Soundscape: ${sound}</span>`;
+      container.prepend(entry);
     }
   </script>
 </body>
